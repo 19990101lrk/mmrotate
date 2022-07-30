@@ -1,15 +1,15 @@
 {
   "nproc": 10,
   "img_dirs": [
-    "data/DOTA/train/images/",
-    "data/DOTA/val/images/"
+    "/root/autodl-tmp/datasets/DOTA/ship/train/images/",
+    "/root/autodl-tmp/datasets/DOTA/ship/val/images/"
   ],
   "ann_dirs": [
-    "data/DOTA/train/labelTxt/",
-    "data/DOTA/val/labelTxt/"
+     "/root/autodl-tmp/datasets/DOTA/ship/train/labelTxt",
+    "/root/autodl-tmp/datasets/DOTA/ship/val/labelTxt/"
   ],
   "sizes": [
-    1024
+    800
   ],
   "gaps": [
     200
@@ -25,6 +25,6 @@
     116,
     124
   ],
-  "save_dir": "data/split_ss_dota/trainval/",
+  "save_dir": "/root/autodl-tmp/datasets/DOTA/ship/trainval/",
   "save_ext": ".png"
 }
