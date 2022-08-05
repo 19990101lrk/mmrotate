@@ -6,7 +6,7 @@ img_norm_cfg = dict(
 train_pipeline = [
     dict(type='LoadImageFromFile'),
     dict(type='LoadAnnotations', with_bbox=True),
-    dict(type='RResize', img_scale=(800, 800)),
+    dict(type='RResize', img_scale=(1024, 1024)),
     dict(type='RRandomFlip', flip_ratio=0.5),
     dict(type='Normalize', **img_norm_cfg),
     dict(type='Pad', size_divisor=32),
@@ -17,7 +17,7 @@ test_pipeline = [
     dict(type='LoadImageFromFile'),
     dict(
         type='MultiScaleFlipAug',
-        img_scale=(800, 800),
+        img_scale=(1024, 1024),
         flip=False,
         transforms=[
             dict(type='RResize'),
@@ -28,20 +28,25 @@ test_pipeline = [
         ])
 ]
 data = dict(
-    samples_per_gpu=2,
-    workers_per_gpu=2,
+    # samples_per_gpu=2,
+    # workers_per_gpu=2,
     train=dict(
         type=dataset_type,
-        ann_file=data_root + 'trainval/annfiles/',
-        img_prefix=data_root + 'trainval/images/',
-        pipeline=train_pipeline),
+        ann_file=data_root + 'train/annfiles/',
+        img_prefix=data_root + 'train/images/',
+        pipeline=train_pipeline,),
     val=dict(
         type=dataset_type,
-        ann_file=data_root + 'trainval/annfiles/',
-        img_prefix=data_root + 'trainval/images/',
+        ann_file=data_root + 'val/annfiles/',
+        img_prefix=data_root + 'val/images/',
         pipeline=test_pipeline),
     test=dict(
         type=dataset_type,
-        ann_file=data_root + 'test/images/',
+        ann_file=data_root + 'test/annfiles/',
         img_prefix=data_root + 'test/images/',
-        pipeline=test_pipeline))
+        pipeline=test_pipeline),
+    train_dataloader=dict(samples_per_gpu=2, workers_per_gpu=4, pin_memory=True),
+    val_dataloader=dict(samples_per_gpu=2, workers_per_gpu=4, pin_memory=True),
+    test_dataloader=dict(samples_per_gpu=2, workers_per_gpu=4, pin_memory=True)
+
+)

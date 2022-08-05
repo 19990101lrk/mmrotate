@@ -9,7 +9,7 @@
     "/root/autodl-tmp/datasets/DOTA/ship/val/labelTxt/"
   ],
   "sizes": [
-    800
+    1024
   ],
   "gaps": [
     200
@@ -25,6 +25,6 @@
     116,
     124
   ],
-  "save_dir": "/root/autodl-tmp/datasets/DOTA/ship/trainval/",
+  "save_dir": "/root/autodl-tmp/datasets/DOTA/ship/split_trainval/",
   "save_ext": ".png"
 }

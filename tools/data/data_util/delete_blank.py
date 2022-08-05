@@ -30,5 +30,5 @@ def delete_empty_object(rootPath):
     print('共删除{}张'.format(count))
 
 if __name__ == '__main__':
-    rootPath = "/root/autodl-tmp/datasets/DOTA/ship/trainval"
+    rootPath = "/root/autodl-tmp/datasets/DOTA/ship/split_trainval"
     delete_empty_object(rootPath)

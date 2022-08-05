@@ -56,7 +56,7 @@ def add_parser(parser):
         '--sizes',
         nargs='+',
         type=int,
-        default=[800],
+        default=[1024],
         help='the sizes of sliding windows')
     parser.add_argument(
         '--gaps',
