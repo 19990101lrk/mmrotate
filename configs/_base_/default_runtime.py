@@ -1,6 +1,6 @@
 # yapf:disable
 log_config = dict(
-    interval=50,        # 50次迭代打印一次日志
+    interval=20,        # 20次迭代打印一次日志
     hooks=[
         dict(type='TextLoggerHook'),
         dict(type='TensorboardLoggerHook')

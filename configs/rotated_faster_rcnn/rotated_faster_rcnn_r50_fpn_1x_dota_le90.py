@@ -3,6 +3,9 @@ _base_ = [
     '../_base_/default_runtime.py'
 ]
 
+work_dir = "/root/autodl-tmp/logs/rotated_faster_rcnn_r50_fpn_1x_dotaship_le90"
+
+
 angle_version = 'le90'
 model = dict(
     type='RotatedFasterRCNN',
@@ -29,7 +32,7 @@ model = dict(
         anchor_generator=dict(
             type='AnchorGenerator',
             scales=[8],
-            ratios=[0.5, 1.0, 2.0],
+            ratios=[1/2, 2., 1/5, 5., 1/7, 7., 1/9, 9.],
             strides=[4, 8, 16, 32, 64]),
         bbox_coder=dict(
             type='DeltaXYWHBBoxCoder',
@@ -52,7 +55,7 @@ model = dict(
             in_channels=256,
             fc_out_channels=1024,
             roi_feat_size=7,
-            num_classes=15,
+            num_classes=1,
             bbox_coder=dict(
                 type='DeltaXYWHAHBBoxCoder',
                 angle_range=angle_version,
@@ -121,7 +124,7 @@ img_norm_cfg = dict(
 train_pipeline = [
     dict(type='LoadImageFromFile'),
     dict(type='LoadAnnotations', with_bbox=True),
-    dict(type='RResize', img_scale=(1024, 1024)),
+    dict(type='RResize', img_scale=(800, 800)),
     dict(
         type='RRandomFlip',
         flip_ratio=[0.25, 0.25, 0.25],
