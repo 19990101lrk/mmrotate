@@ -1,6 +1,6 @@
 # dataset settings
 dataset_type = 'DOTADataset'
-data_root = '/root/autodl-tmp/datasets/DOTA/divide_ship/'
+data_root = 'E:/lrk/trail/datasets/DOTA-v1.5/divide_ship/'
 img_norm_cfg = dict(
     mean=[123.675, 116.28, 103.53], std=[58.395, 57.12, 57.375], to_rgb=True)
 train_pipeline = [

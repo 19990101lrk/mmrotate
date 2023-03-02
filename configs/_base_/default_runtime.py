@@ -1,13 +1,14 @@
 # yapf:disable
 log_config = dict(
-    interval=20,        # 20次迭代打印一次日志
+    interval=40,        # 20次迭代打印一次日志
     hooks=[
         dict(type='TextLoggerHook'),
         dict(type='TensorboardLoggerHook')
     ])
 # yapf:enable
 
-dist_params = dict(backend='nccl')
+# dist_params = dict(backend='nccl')  # linux
+dist_params = dict(backend='gloo')  # windows
 log_level = 'INFO'
 # load_from从一个给定路径里加载模型作为预训练模型，它并不会消耗训练时间
 load_from = None
