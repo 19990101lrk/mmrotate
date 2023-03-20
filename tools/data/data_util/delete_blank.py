@@ -20,15 +20,27 @@ def delete_empty_object(rootPath):
         # 图片完整途径
         path_img = images_path + '/' + name + '.png'
 
-        
-        if not os.path.getsize(path_ann):
-            os.remove(path_ann)
-            os.remove(path_img)
-            count += 1
-            print('{}不含目标，已删除'.format(ann))
+        with open(path_ann, 'r') as f:
+            f.seek(0)
+            r = f.read().strip()
+            # print("ann:", ann, "r: ", r)
+            if  r is None or r == '' or r == ' ':
+            # if  not r:
+                os.remove(path_ann)
+                os.remove(path_img)
+                count += 1
+                print('{}不含目标，已删除'.format(ann))
+
+
+
+        # if not os.path.getsize(path_ann):
+        #     os.remove(path_ann)
+        #     os.remove(path_img)
+        #     count += 1
+        #     print('{}不含目标，已删除'.format(ann))
 
     print('共删除{}张'.format(count))
 
 if __name__ == '__main__':
-    rootPath = "/root/autodl-tmp/datasets/DOTA/ship/split_trainval"
+    rootPath = "E:/lrk/trail/datasets/DOTA-v1.5/divide_ship/train"
     delete_empty_object(rootPath)

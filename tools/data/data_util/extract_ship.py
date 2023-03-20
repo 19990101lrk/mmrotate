@@ -67,17 +67,29 @@ def extract_ship_object():
 
 def draw_ship_object():
 
-    imgPath = r"/root/autodl-tmp/datasets/DOTA/divide_ship/test/images/P0775__800__600___0.png"
-    txtPath = r"/root/autodl-tmp/datasets/DOTA/divide_ship/test/annfiles/P0775__800__600___0.txt"
-    savePath = os.path.basename(imgPath).split(".")[0] + "_gt" + ".jpg"
+    imgPath = r"E:/lrk/trail/datasets/DOTA-v1.5/divide_ship/train/images/P0299__800__0___37.png"
+    txtPath = r"E:/lrk/trail/datasets/DOTA-v1.5/divide_ship/train/annfiles/P0299__800__0___37.txt"
+
+    imgPath = "E:/lrk/trail/datasets/DOTA-v1.5/divide_ship/test/images/P0896__800__1200___1200.png"
+    txtPath = "E:/lrk/trail/datasets/DOTA-v1.5/divide_ship/test/annfiles/P0896__800__1200___1200.txt"
+    # savePath = os.path.basename(imgPath).split(".")[0] + "_gt" + ".jpg"
+    savePath = "E:/lrk/trail/论文/小论文/图表/图/GT/" + "P0896__800__1200___1200__gt" + ".jpg"
     # savePath = "obb.jpg"
     drawType = "obb"
 
     img = Image.open(imgPath)
 
     draw = ImageDraw.Draw(img)
+    i = 0
     with open(txtPath, "r") as f:
         for line in f.readlines():
+
+            # 跳过前两行
+            # if i==0 or i==1:
+            #     print("line", line)
+            #     i = i + 1
+            #     continue
+
             #  去掉列表中每一个元素的换行符
             line = line.strip('\n')
             line = line.split(" ")
@@ -91,10 +103,10 @@ def draw_ship_object():
                 draw.polygon(polygon, outline='red')
             elif (drawType == "hbb"):
                 #  绘制HBB水平边界框
-                xmin = min(int(line[0]), int(line[2]), int(line[4]), int(line[6]))
-                xmax = max(int(line[0]), int(line[2]), int(line[4]), int(line[6]))
-                ymin = min(int(line[1]), int(line[3]), int(line[5]), int(line[7]))
-                ymax = max(int(line[1]), int(line[3]), int(line[5]), int(line[7]))
+                xmin = min(float(line[0]), float(line[2]), float(line[4]), float(line[6]))
+                xmax = max(float(line[0]), float(line[2]), float(line[4]), float(line[6]))
+                ymin = min(float(line[1]), float(line[3]), float(line[5]), float(line[7]))
+                ymax = max(float(line[1]), float(line[3]), float(line[5]), float(line[7]))
                 draw.rectangle(
                     [xmin, ymin, xmax, ymax],
                     outline='red')

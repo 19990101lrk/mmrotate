@@ -1,23 +1,27 @@
 _base_ = [
-    '../_base_/datasets/dotav1.py', '../_base_/schedules/schedule_1x.py',
+    '../_base_/datasets/hrsc.py', '../_base_/schedules/schedule_2x.py',
     '../_base_/default_runtime.py'
 ]
 
+work_dir = "E:/lrk/trail/logs/HRSC2016/baseline/ext/roi_trans_r50_fpn_fp16_2x_hrsc_le90"
+# fp16 = dict(loss_scale='dynamic')
+
+
 angle_version = 'le90'
 model = dict(
-    type='ReDet',
+    type='RoITransformer',
     backbone=dict(
-        type='ReResNet',
+        type='ResNet',
         depth=50,
         num_stages=4,
         out_indices=(0, 1, 2, 3),
         frozen_stages=1,
+        norm_cfg=dict(type='BN', requires_grad=True),
+        norm_eval=True,
         style='pytorch',
-        # pretrained='E:/lrk/trail/code/mmrotate/configs/redet/pretrain/re_resnet50_c8_batch256-25b16846.pth',
-        init_cfg=dict(type='Pretrained', checkpoint='E:/lrk/trail/code/mmrotate/configs/redet/pretrain/re_resnet50_c8_batch256-25b16846.pth')
-    ),
+        init_cfg=dict(type='Pretrained', checkpoint='torchvision://resnet50')),
     neck=dict(
-        type='ReFPN',
+        type='FPN',
         in_channels=[256, 512, 1024, 2048],
         out_channels=256,
         num_outs=5),
@@ -53,10 +57,9 @@ model = dict(
             dict(
                 type='RotatedSingleRoIExtractor',
                 roi_layer=dict(
-                    type='RiRoIAlignRotated',
+                    type='RoIAlignRotated',
                     out_size=7,
-                    num_samples=2,
-                    num_orientations=8,
+                    sample_num=2,
                     clockwise=True),
                 out_channels=256,
                 featmap_strides=[4, 8, 16, 32]),
@@ -103,6 +106,7 @@ model = dict(
                     loss_weight=1.0),
                 loss_bbox=dict(type='SmoothL1Loss', beta=1.0, loss_weight=1.0))
         ]),
+    # model training and testing settings
     train_cfg=dict(
         rpn=dict(
             assigner=dict(
@@ -172,7 +176,7 @@ model = dict(
             nms_pre=2000,
             min_bbox_size=0,
             score_thr=0.05,
-            nms=dict(iou_thr=0.1),
+            nms=dict(type=angle_version, iou_thr=0.1),
             max_per_img=2000)))
 
 img_norm_cfg = dict(
@@ -180,20 +184,32 @@ img_norm_cfg = dict(
 train_pipeline = [
     dict(type='LoadImageFromFile'),
     dict(type='LoadAnnotations', with_bbox=True),
-    dict(type='RResize', img_scale=(800, 800)),
-    dict(
-        type='RRandomFlip',
-        flip_ratio=[0.25, 0.25, 0.25],
-        direction=['horizontal', 'vertical', 'diagonal'],
-        version=angle_version),
+    dict(type='RResize', img_scale=(800, 512)),
+    dict(type='RRandomFlip', flip_ratio=0.5),
     dict(type='Normalize', **img_norm_cfg),
     dict(type='Pad', size_divisor=32),
     dict(type='DefaultFormatBundle'),
     dict(type='Collect', keys=['img', 'gt_bboxes', 'gt_labels'])
 ]
+test_pipeline = [
+    dict(type='LoadImageFromFile'),
+    dict(
+        type='MultiScaleFlipAug',
+        img_scale=(800, 512),
+        flip=False,
+        transforms=[
+            dict(type='RResize'),
+            dict(type='Normalize', **img_norm_cfg),
+            dict(type='Pad', size_divisor=32),
+            dict(type='DefaultFormatBundle'),
+            dict(type='Collect', keys=['img'])
+        ])
+]
 data = dict(
     train=dict(pipeline=train_pipeline, version=angle_version),
-    val=dict(version=angle_version),
-    test=dict(version=angle_version))
+    val=dict(pipeline=test_pipeline, version=angle_version),
+    test=dict(pipeline=test_pipeline, version=angle_version))
 
-optimizer = dict(lr=0.005)
+
+evaluation = dict(interval=4, metric='mAP')
+# optimizer = dict(lr=0.01)

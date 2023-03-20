@@ -23,7 +23,12 @@ from mmrotate.utils import collect_env, get_root_logger, setup_multi_processes
 
 def parse_args():
     parser = argparse.ArgumentParser(description='Train a detector')
-    parser.add_argument('config', help='train config file path')
+
+    # debug
+    # parser.add_argument('--config', default='../configs/oriented_rcnn/oriented_rcnn_r50_myfpn_fp16_1x_dota_le90.py', help='train config file path')
+    parser.add_argument('--config', default='../configs/oriented_rcnn/oriented_rcnn_s50_myfpn_fp16_1x_hrsc_le90.py', help='train config file path')
+
+    # parser.add_argument('config', help='train config file path')
     parser.add_argument('--work-dir', help='the dir to save logs and models')
     parser.add_argument(
         '--resume-from', help='the checkpoint file to resume from')
@@ -190,3 +195,4 @@ def main():
 
 if __name__ == '__main__':
     main()
+    # Dubug argparse使用默认值，或者在程序调用argparse传入参数之前，对该参数进行赋值 args.config=

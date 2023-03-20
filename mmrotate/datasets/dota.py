@@ -8,7 +8,8 @@ import time
 import zipfile
 from collections import defaultdict
 from functools import partial
-
+from collections import OrderedDict
+from mmcv import print_log
 import mmcv
 import numpy as np
 import torch
@@ -165,7 +166,8 @@ class DOTADataset(CustomDataset):
                  metric='mAP',
                  logger=None,
                  proposal_nums=(100, 300, 1000),
-                 iou_thr=0.5,
+                 iou_thr=[0.5, 0.55, 0.6, 0.65, 0.7, 0.75, 0.8, 0.85, 0.9, 0.95],
+                 # iou_thr=0.5,
                  scale_ranges=None,
                  nproc=4):
         """Evaluate the dataset.
@@ -194,18 +196,28 @@ class DOTADataset(CustomDataset):
         if metric not in allowed_metrics:
             raise KeyError(f'metric {metric} is not supported')
         annotations = [self.get_ann_info(i) for i in range(len(self))]
-        eval_results = {}
+        # eval_results = {}
+        eval_results = OrderedDict()
+        iou_thrs = [iou_thr] if isinstance(iou_thr, float) else iou_thr
         if metric == 'mAP':
-            assert isinstance(iou_thr, float)
-            mean_ap, _ = eval_rbbox_map(
-                results,
-                annotations,
-                scale_ranges=scale_ranges,
-                iou_thr=iou_thr,
-                dataset=self.CLASSES,
-                logger=logger,
-                nproc=nproc)
-            eval_results['mAP'] = mean_ap
+            assert isinstance(iou_thrs, list)
+            mean_aps = []
+
+            for iou_thr in iou_thrs:
+                print_log(f'\n{"-" * 15}iou_thr: {iou_thr}{"-" * 15}')
+                mean_ap, _ = eval_rbbox_map(
+                    results,
+                    annotations,
+                    scale_ranges=scale_ranges,
+                    iou_thr=iou_thr,
+                    use_07_metric=False,
+                    dataset=self.CLASSES,
+                    logger=logger,
+                    nproc=nproc)
+                mean_aps.append(mean_ap)
+                eval_results[f'AP{int(iou_thr * 100):02d}'] = round(mean_ap, 4)
+            eval_results['mAP'] = sum(mean_aps) / len(mean_aps)
+            eval_results.move_to_end('mAP', last=False)
         else:
             raise NotImplementedError
 

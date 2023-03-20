@@ -210,8 +210,9 @@ class HRSCDataset(CustomDataset):
             logger=None,
             proposal_nums=(100, 300, 1000),
             iou_thr=[0.5, 0.55, 0.6, 0.65, 0.7, 0.75, 0.8, 0.85, 0.9, 0.95],
+            # iou_thr=[0.5,0.75],
             scale_ranges=None,
-            use_07_metric=True,
+            use_07_metric=False,
             nproc=4):
         """Evaluate the dataset.
 

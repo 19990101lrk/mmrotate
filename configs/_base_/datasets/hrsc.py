@@ -1,6 +1,6 @@
 # dataset settings
 dataset_type = 'HRSCDataset'
-data_root = 'data/hrsc/'
+data_root = 'E:/lrk/trail/datasets/HRSC2016/HRSC2016_dataset/HRSC2016/'
 img_norm_cfg = dict(
     mean=[123.675, 116.28, 103.53], std=[58.395, 57.12, 57.375], to_rgb=True)
 train_pipeline = [
@@ -28,8 +28,8 @@ test_pipeline = [
         ])
 ]
 data = dict(
-    samples_per_gpu=2,
-    workers_per_gpu=2,
+    # samples_per_gpu=2,
+    # workers_per_gpu=2,
     train=dict(
         type=dataset_type,
         classwise=False,
@@ -53,4 +53,8 @@ data = dict(
         ann_subdir=data_root + 'FullDataSet/Annotations/',
         img_subdir=data_root + 'FullDataSet/AllImages/',
         img_prefix=data_root + 'FullDataSet/AllImages/',
-        pipeline=test_pipeline))
+        pipeline=test_pipeline),
+    train_dataloader=dict(samples_per_gpu=2, workers_per_gpu=8, pin_memory=True),
+    val_dataloader=dict(samples_per_gpu=2, workers_per_gpu=8, pin_memory=True),
+    test_dataloader=dict(samples_per_gpu=4, workers_per_gpu=8, pin_memory=True)
+)

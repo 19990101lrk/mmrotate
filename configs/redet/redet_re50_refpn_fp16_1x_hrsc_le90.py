@@ -1,7 +1,10 @@
 _base_ = [
-    '../_base_/datasets/hrsc.py', '../_base_/schedules/schedule_3x.py',
+    '../_base_/datasets/hrsc.py', '../_base_/schedules/schedule_2x.py',
     '../_base_/default_runtime.py'
 ]
+
+work_dir = "E:/lrk/trail/logs/HRSC2016/baseline/ext/redet_re50_refpn_fp16_2x_hrsc_le90"
+# fp16 = dict(loss_scale='dynamic')
 
 angle_version = 'le90'
 model = dict(
@@ -13,7 +16,9 @@ model = dict(
         out_indices=(0, 1, 2, 3),
         frozen_stages=1,
         style='pytorch',
-        pretrained='./work_dirs/re_resnet50_c8_batch256-25b16846.pth'),
+        # pretrained='E:/lrk/trail/code/mmrotate/configs/redet/pretrain/re_resnet50_c8_batch256-25b16846.pth'),
+        init_cfg=dict(type='Pretrained', checkpoint='E:/lrk/trail/code/mmrotate/configs/redet/pretrain/re_resnet50_c8_batch256-25b16846.pth')
+    ),
     neck=dict(
         type='ReFPN',
         in_channels=[256, 512, 1024, 2048],
@@ -205,5 +210,5 @@ data = dict(
     val=dict(pipeline=test_pipeline),
     test=dict(pipeline=test_pipeline))
 
-evaluation = dict(interval=12, metric='mAP')
-optimizer = dict(lr=0.01)
+evaluation = dict(interval=4, metric='mAP')
+# optimizer = dict(lr=0.01)

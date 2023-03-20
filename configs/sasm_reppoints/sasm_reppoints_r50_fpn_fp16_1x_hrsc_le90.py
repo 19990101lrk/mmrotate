@@ -1,19 +1,19 @@
 _base_ = [
-    '../_base_/datasets/dotav1.py', '../_base_/schedules/schedule_1x.py',
+    '../_base_/datasets/hrsc.py', '../_base_/schedules/schedule_2x.py',
     '../_base_/default_runtime.py'
 ]
 
 
-work_dir = "/root/autodl-tmp/logs/oriented_reppoints_r101_fpn_1x_dota_ship_le90"
-angle_version = 'le90'
-# fp16 = dict(loss_scale='dynamic')      # 混合精度训练
+work_dir = "E:/lrk/trail/logs/HRSC2016/baseline/ext/sasm_reppoints_r50_fpn_fp16_2x_hrsc_le90"
+# fp16 = dict(loss_scale='dynamic')
 
+angle_version = 'le90'
 norm_cfg = dict(type='GN', num_groups=32, requires_grad=True)
 model = dict(
     type='RotatedRepPoints',
     backbone=dict(
         type='ResNet',
-        depth=101,
+        depth=50,
         num_stages=4,
         out_indices=(0, 1, 2, 3),
         frozen_stages=1,
@@ -21,7 +21,7 @@ model = dict(
         norm_cfg=dict(type='BN', requires_grad=True),
         norm_eval=True,
         style='pytorch',
-        init_cfg=dict(type='Pretrained', checkpoint='torchvision://resnet101')),
+        init_cfg=dict(type='Pretrained', checkpoint='torchvision://resnet50')),
     neck=dict(
         type='FPN',
         in_channels=[256, 512, 1024, 2048],
@@ -31,7 +31,7 @@ model = dict(
         num_outs=5,
         norm_cfg=norm_cfg),
     bbox_head=dict(
-        type='OrientedRepPointsHead',
+        type='SAMRepPointsHead',
         num_classes=1,
         in_channels=256,
         feat_channels=256,
@@ -48,12 +48,12 @@ model = dict(
             gamma=2.0,
             alpha=0.25,
             loss_weight=1.0),
-        loss_bbox_init=dict(type='ConvexGIoULoss', loss_weight=0.375),
+        loss_bbox_init=dict(type='BCConvexGIoULoss', loss_weight=0.375),
         loss_bbox_refine=dict(type='ConvexGIoULoss', loss_weight=1.0),
-        loss_spatial_init=dict(type='SpatialBorderLoss', loss_weight=0.05),
-        loss_spatial_refine=dict(type='SpatialBorderLoss', loss_weight=0.1),
-        init_qua_weight=0.2,
-        top_ratio=0.4),
+        transform_method='rotrect',
+        use_reassign=False,
+        topk=6,
+        anti_factor=0.75),
     # training and testing settings
     train_cfg=dict(
         init=dict(
@@ -62,12 +62,8 @@ model = dict(
             pos_weight=-1,
             debug=False),
         refine=dict(
-            assigner=dict(
-                type='MaxConvexIoUAssigner',
-                pos_iou_thr=0.1,
-                neg_iou_thr=0.1,
-                min_pos_iou=0,
-                ignore_iof_thr=-1),
+            _delete_=True,
+            assigner=dict(type='SASAssigner', topk=9),
             allowed_border=-1,
             pos_weight=-1,
             debug=False)),
@@ -75,7 +71,7 @@ model = dict(
         nms_pre=2000,
         min_bbox_size=0,
         score_thr=0.05,
-        nms=dict(iou_thr=0.4),
+        nms=dict(iou_thr=0.1),
         max_per_img=2000))
 
 img_norm_cfg = dict(
@@ -83,24 +79,33 @@ img_norm_cfg = dict(
 train_pipeline = [
     dict(type='LoadImageFromFile'),
     dict(type='LoadAnnotations', with_bbox=True),
-    dict(type='RResize', img_scale=(800, 800)),
-    dict(
-        type='RRandomFlip',
-        flip_ratio=[0.25, 0.25, 0.25],
-        direction=['horizontal', 'vertical', 'diagonal'],
-        version=angle_version),
+    dict(type='RResize', img_scale=(800, 512)),
+    dict(type='RRandomFlip', flip_ratio=0.5),
     dict(type='Normalize', **img_norm_cfg),
     dict(type='Pad', size_divisor=32),
     dict(type='DefaultFormatBundle'),
     dict(type='Collect', keys=['img', 'gt_bboxes', 'gt_labels'])
 ]
+test_pipeline = [
+    dict(type='LoadImageFromFile'),
+    dict(
+        type='MultiScaleFlipAug',
+        img_scale=(800, 512),
+        flip=False,
+        transforms=[
+            dict(type='RResize'),
+            dict(type='Normalize', **img_norm_cfg),
+            dict(type='Pad', size_divisor=32),
+            dict(type='DefaultFormatBundle'),
+            dict(type='Collect', keys=['img'])
+        ])
+]
+
 data = dict(
     train=dict(pipeline=train_pipeline, version=angle_version),
-    val=dict(version=angle_version),
-    test=dict(version=angle_version),
-    train_dataloader=dict(samples_per_gpu=2, workers_per_gpu=4, pin_memory=True),
-    val_dataloader=dict(samples_per_gpu=2, workers_per_gpu=4, pin_memory=True),
-    test_dataloader=dict(samples_per_gpu=4, workers_per_gpu=4, pin_memory=True)
-)
-optimizer = dict(lr=0.005)
-# checkpoint_config = dict(interval=1)
+    val=dict(pipeline=test_pipeline, version=angle_version),
+    test=dict(pipeline=test_pipeline, version=angle_version))
+
+
+evaluation = dict(interval=4, metric='mAP')
+# optimizer = dict(lr=0.01)

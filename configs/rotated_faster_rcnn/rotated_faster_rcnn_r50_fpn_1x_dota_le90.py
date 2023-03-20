@@ -3,8 +3,7 @@ _base_ = [
     '../_base_/default_runtime.py'
 ]
 
-work_dir = "/root/autodl-tmp/logs/rotated_faster_rcnn_r50_fpn_1x_dotaship_le90"
-
+work_dir = "E:/lrk/trail/logs/rotated_faster_rcnn_r50_fpn_1x_dotaship_le90"
 
 angle_version = 'le90'
 model = dict(
@@ -15,6 +14,7 @@ model = dict(
         num_stages=4,
         out_indices=(0, 1, 2, 3),
         frozen_stages=1,
+        # with_cp=True,
         norm_cfg=dict(type='BN', requires_grad=True),
         norm_eval=True,
         style='pytorch',
@@ -32,7 +32,8 @@ model = dict(
         anchor_generator=dict(
             type='AnchorGenerator',
             scales=[8],
-            ratios=[1/2, 2., 1/5, 5., 1/7, 7., 1/9, 9.],
+            ratios=[0.5, 1.0, 2.0],
+            # ratios=[1 / 2, 2., 1 / 5, 5., 1 / 7, 7., 1 / 9, 9.],
             strides=[4, 8, 16, 32, 64]),
         bbox_coder=dict(
             type='DeltaXYWHBBoxCoder',
@@ -74,6 +75,7 @@ model = dict(
                 pos_iou_thr=0.7,
                 neg_iou_thr=0.3,
                 min_pos_iou=0.3,
+                # gpu_assign_thr=150,
                 match_low_quality=True,
                 ignore_iof_thr=-1),
             sampler=dict(
@@ -96,6 +98,7 @@ model = dict(
                 pos_iou_thr=0.5,
                 neg_iou_thr=0.5,
                 min_pos_iou=0.5,
+                # gpu_assign_thr=150,
                 match_low_quality=False,
                 ignore_iof_thr=-1),
             sampler=dict(
