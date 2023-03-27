@@ -8,9 +8,21 @@ import mmrotate  # noqa: F401
 
 def parse_args():
     parser = ArgumentParser()
-    parser.add_argument('img', help='Image file')
-    parser.add_argument('config', help='Config file')
-    parser.add_argument('checkpoint', help='Checkpoint file')
+    # parser.add_argument('img', help='Image file')
+    # parser.add_argument('config', help='Config file')
+    # parser.add_argument('checkpoint', help='Checkpoint file')
+    #
+    parser.add_argument('--img', default='E:/lrk/trail/datasets/DOTA-v1.5/divide_ship/test/images/P0896__800__1200___1200.png', help='Image file')
+    # 基础网络
+    parser.add_argument('--config', default='E:/lrk/trail/logs/baseline/oriented_rcnn_r50_fpn_fp16_1x_dota_le90_R3/oriented_rcnn_r50_fpn_fp16_1x_dota_le90.py', help='Config file')
+    parser.add_argument('--checkpoint', default='E:/lrk/trail/logs/baseline/oriented_rcnn_r50_fpn_fp16_1x_dota_le90_R3/latest.pth', help='Checkpoint file')
+
+    # proposal method
+    # parser.add_argument('--config', default='E:/lrk/trail/logs/modify_V1/oriented_rcnn/oriented_rcnn_s50_k1r2_adamW_myfpn_fp16_1x_dota_le90_R3_flipNone_v3/oriented_rcnn_r50_myfpn_fp16_1x_dota_le90.py', help='Config file')
+    # parser.add_argument('--checkpoint', default='E:/lrk/trail/logs/modify_V1/oriented_rcnn/oriented_rcnn_s50_k1r2_adamW_myfpn_fp16_1x_dota_le90_R3_flipNone_v3/latest.pth', help='Checkpoint file')
+
+
+
     parser.add_argument('--out-file', default=None, help='Path to output file')
     parser.add_argument(
         '--device', default='cuda:0', help='Device used for inference')

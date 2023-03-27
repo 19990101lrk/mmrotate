@@ -7,7 +7,7 @@ from mmcv.ops import box_iou_rotated
 from mmcv.utils import print_log
 from mmdet.core import average_precision
 from terminaltables import AsciiTable
-
+import csv
 
 def tpfp_default(det_bboxes,
                  gt_bboxes,
@@ -230,6 +230,12 @@ def eval_rbbox_map(det_results,
             'ap': ap,
             'F1': f1_score
         })
+
+        # ----------------- 测试时保存 iou=0.5 和 iou=0.75 的 recall 和 precision，画 P_R_curve ------------------------#
+        # if iou_thr == 0.5 or iou_thr == 0.75:
+        #     save_csv_p_r(eval_results, iou_thr)
+        # ------------------------------------------------------------------------------------------------- #
+
         print_log(eval_results, logger=logger)
     pool.close()
     if scale_ranges is not None:
@@ -336,3 +342,31 @@ def print_map_summary(mean_ap,
         table = AsciiTable(table_data)
         table.inner_footing_row_border = True
         print_log('\n' + table.table, logger=logger)
+
+
+def save_csv_p_r(results, iou_thr):
+    """
+    将 recall precision 保存到 CSV 文件中
+    Args:
+        results:
+        iou_thr:
+
+    Returns:
+
+    """
+    csv_file_root = 'E:/wm/logs/DOTA/'
+    file_name = 'oriented_rcnn_dota_' + str(iou_thr) + '.csv'
+
+    # 将字典的键作为CSV文件的列标题
+    field_names = ['recall', 'precison']
+
+    with open(csv_file_root + file_name, mode='w', newline='') as csv_file:
+        writer = csv.writer(csv_file)
+
+        writer.writerow(field_names)
+
+        for result in results:
+            recall = result['recall']
+            precision = result['precision']
+            for i in range(len(recall)):
+                writer.writerow([recall[i], precision[i]])
