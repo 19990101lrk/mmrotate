@@ -26,7 +26,7 @@ def parse_args():
 
     # debug
     # parser.add_argument('--config', default='../configs/oriented_rcnn/oriented_rcnn_r50_myfpn_fp16_1x_dota_le90.py', help='train config file path')
-    parser.add_argument('--config', default='../configs/oriented_rcnn/oriented_rcnn_s50_myfpn_fp16_1x_hrsc_le90.py', help='train config file path')
+    parser.add_argument('--config', default='../configs/oriented_rcnn/oriented_rcnn_r50_fpn_6x_ssdd_le90.py', help='train config file path')
 
     # parser.add_argument('config', help='train config file path')
     parser.add_argument('--work-dir', help='the dir to save logs and models')

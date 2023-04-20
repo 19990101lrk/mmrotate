@@ -71,6 +71,15 @@ def plot_curve(log_dicts, args):
                 ax = plt.gca()
                 ax.set_xticks(xs)
                 plt.xlabel('epoch')
+                plt.ylim(0, 0.7)
+                from matplotlib import rcParams
+                plt.rcParams['font.sans-serif'] = ['Times New Roman']  # 设置全部字体为Euclid
+                config = {
+                    "font.family": 'Times New Roman',  # 设置字体类型
+                    "font.size": 9,
+                    #     "mathtext.fontset":'stix',
+                }
+                rcParams.update(config)
                 plt.plot(xs, ys, label=legend[i * num_metrics + j], marker='o')
             else:
                 xs = []
@@ -86,6 +95,15 @@ def plot_curve(log_dicts, args):
                 xs = np.concatenate(xs)
                 ys = np.concatenate(ys)
                 plt.xlabel('iter')
+                plt.ylim(0, 0.7)
+                from matplotlib import rcParams
+                plt.rcParams['font.sans-serif'] = ['Times New Roman']  # 设置全部字体为Euclid
+                config = {
+                    "font.family": 'Times New Roman',  # 设置字体类型
+                    "font.size": 9,
+                    #     "mathtext.fontset":'stix',
+                }
+                rcParams.update(config)
                 plt.plot(
                     xs, ys, label=legend[i * num_metrics + j], linewidth=0.5)
             plt.legend()

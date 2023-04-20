@@ -40,6 +40,6 @@ def visualization_bbox1(num_image, json_path, img_path):  # 需要画的第num�
 
 
 if __name__ == "__main__":
-    train_json = 'E:/lrk/trail/datasets/DOTA-v1.5/divide_ship/annotations/train.json'
-    train_path = 'E:/lrk/trail/datasets/DOTA-v1.5/divide_ship'
-    visualization_bbox1(152, train_json, train_path)
+    train_json = 'E:/lrk/trail/datasets/SSDD/test/all/testall_hbox.json'
+    train_path = 'E:/lrk/trail/datasets/SSDD/test/all/images'
+    visualization_bbox1(14, train_json, train_path)

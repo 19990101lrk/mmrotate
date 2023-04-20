@@ -470,24 +470,24 @@ class MyFPN(BaseModule):
                     else:
                         outs.append(self.fpn_convs[i](outs[-1]))
         # 输出特征图
-        import matplotlib.pyplot as plt
-        import numpy as np
-        for j, out in enumerate(outs):
-            # [b,c,h,w] --> [c,h,w],从GPU转到CPU
-            im = np.squeeze(out.cpu().detach().numpy())
-            # [c,h,w] --> [h,w,c]
-            im = np.transpose(im, [1, 2, 0])
-            plt.figure()
-            # 前12个特征图
-            for i in range(12):
-                ax = plt.subplot(3, 4, i + 1)
-                plt.imshow(im[:, :, i] * 255, cmap='gray')
-                ax.tick_params(axis='both', which='both', length=0)  # 设置坐标轴数值不可见
-                ax.axes.xaxis.set_visible(False)
-                ax.axes.yaxis.set_visible(False)
-            plt.axis('off')
-            plt.savefig(f"E:/lrk/trail/logs/data/feature_map/fpn_out_{j}.svg", format='svg', dpi=600, bbox_inches='tight')
-            plt.show()
+        # import matplotlib.pyplot as plt
+        # import numpy as np
+        # for j, out in enumerate(outs):
+        #     # [b,c,h,w] --> [c,h,w],从GPU转到CPU
+        #     im = np.squeeze(out.cpu().detach().numpy())
+        #     # [c,h,w] --> [h,w,c]
+        #     im = np.transpose(im, [1, 2, 0])
+        #     plt.figure()
+        #     # 前12个特征图
+        #     for i in range(12):
+        #         ax = plt.subplot(3, 4, i + 1)
+        #         plt.imshow(im[:, :, i] * 255, cmap='gray')
+        #         ax.tick_params(axis='both', which='both', length=0)  # 设置坐标轴数值不可见
+        #         ax.axes.xaxis.set_visible(False)
+        #         ax.axes.yaxis.set_visible(False)
+        #     plt.axis('off')
+        #     plt.savefig(f"E:/lrk/trail/logs/data/feature_map/fpn_out_{j}.svg", format='svg', dpi=600, bbox_inches='tight')
+        #     plt.show()
 
         return tuple(outs)
 

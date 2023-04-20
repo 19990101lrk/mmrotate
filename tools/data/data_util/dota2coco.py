@@ -75,7 +75,8 @@ def generate_coco_fmt(data_root, anno_root, categories, img_root):
             all_annos.extend(annos)
 
             img = Image.open(img_path)
-            all_images.append(coco_images(osp.join(img_root, file_name), img.height, img.width, img_id))
+            # all_images.append(coco_images(osp.join(img_root, file_name), img.height, img.width, img_id))
+            all_images.append(coco_images(file_name, img.height, img.width, img_id))
             img_id += 1
     return {
         'images': all_images,
@@ -97,9 +98,9 @@ for i in range(1, 2):
 # img_path = "E:/lrk/trail/datasets/DOTA-v1.5/origin_ship/test/images"
 # txt_path = "E:/lrk/trail/datasets/DOTA-v1.5/origin_ship/test/labelTxt"
 # 路径自己改一下记得
-data_root = 'E:/lrk/trail/datasets/DOTA-v1.5/divide_ship'
-anno_root = 'val/annfiles'
-img_root = 'val/images'
-out_json = osp.join(data_root, 'annotations/val.json')
+data_root = 'E:/lrk/trail/datasets/SSDD/test/offshore'
+anno_root = 'labelTxt'
+img_root = 'images'
+out_json = osp.join(data_root, 'offshore_hbox.json')
 dota_coco_fmt = generate_coco_fmt(data_root, anno_root, categories, img_root)
 json.dump(dota_coco_fmt, open(out_json, 'a'), ensure_ascii=False)

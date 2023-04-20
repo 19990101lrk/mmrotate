@@ -67,15 +67,15 @@ def extract_ship_object():
 
 def draw_ship_object():
 
-    imgPath = r"E:/lrk/trail/datasets/DOTA-v1.5/divide_ship/train/images/P0299__800__0___37.png"
-    txtPath = r"E:/lrk/trail/datasets/DOTA-v1.5/divide_ship/train/annfiles/P0299__800__0___37.txt"
+    # imgPath = r"E:/lrk/trail/datasets/DOTA-v1.5/divide_ship/train/images/P0299__800__0___37.png"
+    # txtPath = r"E:/lrk/trail/datasets/DOTA-v1.5/divide_ship/train/annfiles/P0299__800__0___37.txt"
 
-    imgPath = "E:/lrk/trail/datasets/DOTA-v1.5/divide_ship/test/images/P0896__800__1200___1200.png"
-    txtPath = "E:/lrk/trail/datasets/DOTA-v1.5/divide_ship/test/annfiles/P0896__800__1200___1200.txt"
+    imgPath = "E:/lrk/trail/datasets/HRSID/testsplit/all/images_bak/1524_0_0.png"
+    txtPath = "E:/lrk/trail/datasets/HRSID/testsplit/all/labelTxt_bak/1524_0_0.txt"
     # savePath = os.path.basename(imgPath).split(".")[0] + "_gt" + ".jpg"
-    savePath = "E:/lrk/trail/论文/小论文/图表/图/GT/" + "P0896__800__1200___1200__gt" + ".jpg"
+    # savePath = "E:/lrk/trail/论文/小论文/图表/图/GT/" + "P0896__800__1200___1200__gt" + ".jpg"
     # savePath = "obb.jpg"
-    drawType = "obb"
+    drawType = "hbb"
 
     img = Image.open(imgPath)
 
@@ -109,7 +109,8 @@ def draw_ship_object():
                 ymax = max(float(line[1]), float(line[3]), float(line[5]), float(line[7]))
                 draw.rectangle(
                     [xmin, ymin, xmax, ymax],
-                    outline='red')
+                    outline='red', width=3)
+    savePath = 'D:/lrk/Desktop/GT.jpg'
     img.save(savePath, quality=95)
     # img.show()
 

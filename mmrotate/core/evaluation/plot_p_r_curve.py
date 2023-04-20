@@ -7,11 +7,11 @@ all_recalls = []
 all_precisions = []
 file_names=[]
 
-root = 'E:/lrk/trail/logs/data/PR_CSV/HRSC2016/'
+root = 'E:/lrk/trail/logs/data/PR_CSV/DOTA/'
 
 # 遍历文件夹中的所有CSV文件
 for filename in os.listdir(root):
-    if filename.endswith('hrsc_0.5.csv'):
+    if filename.endswith('dota_0.5.csv'):
         # 读取CSV文件
         with open(os.path.join(root, filename)) as csv_file:
             csv_reader = csv.reader(csv_file)
@@ -33,18 +33,18 @@ colors = ['b', 'g', 'r', 'c', 'm', 'y', 'k']  # 颜色列表
 for i in range(len(all_recalls)):
     # plt.plot(all_recalls[i], all_precisions[i], color=colors[i % len(colors)], label=f'File {i + 1}')
     plt.plot(all_recalls[i], all_precisions[i], color=colors[i % len(colors)], label=file_names[i])
-plt.rcParams['font.sans-serif'] = ['Euclid']  # 设置全部字体为Euclid
+plt.rcParams['font.sans-serif'] = ['Times new Roman']  # 设置全部字体为Euclid
 config = {
-    "font.family": 'Euclid',  # 设置字体类型
-    "font.size": 8,
+    "font.family": 'Times new Roman',  # 设置字体类型
+    "font.size": 9,
 #     "mathtext.fontset":'stix',
 }
 rcParams.update(config)
-# plt.ylim(0.825,1)
+plt.ylim(0.825,1)
 plt.xlabel('Recall')
 plt.ylabel('Precision')
 plt.title('P_R_Curve')
 plt.legend()
-plt.savefig(root + 'img/hrsc_ap50.svg', format='svg', dpi=600, bbox_inches='tight')
+plt.savefig(root + 'img/dota_ap50.svg', format='svg', dpi=600, bbox_inches='tight')
 plt.show()
 

@@ -1,7 +1,11 @@
 _base_ = [
-    '../_base_/datasets/hrsid.py', '../_base_/schedules/schedule_3x.py',
+    '../_base_/datasets/hrsid.py', '../_base_/schedules/schedule_6x.py',
     '../_base_/default_runtime.py'
 ]
+
+work_dir = 'E:/lrk/trail/logs/SAR/HRSID/baseline/oriented_rcnn_r50_fpn_6x_hrsid_le90'
+fp16 = dict(loss_scale='dynamic')
+
 
 angle_version = 'le90'
 model = dict(
@@ -127,7 +131,7 @@ img_norm_cfg = dict(
 train_pipeline = [
     dict(type='LoadImageFromFile'),
     dict(type='LoadAnnotations', with_bbox=True),
-    dict(type='RResize', img_scale=(608, 608)),
+    dict(type='RResize', img_scale=(800, 800)),
     dict(
         type='RRandomFlip',
         flip_ratio=[0.25, 0.25, 0.25],
@@ -143,16 +147,5 @@ data = dict(
     val=dict(version=angle_version),
     test=dict(version=angle_version))
 
-optimizer = dict(lr=0.005)
+optimizer = dict(lr=0.01)
 
-# evaluation
-evaluation = dict(interval=72, metric='mAP')
-# learning policy
-lr_config = dict(
-    policy='step',
-    warmup='linear',
-    warmup_iters=500,
-    warmup_ratio=1.0 / 3,
-    step=[65, 71])
-runner = dict(type='EpochBasedRunner', max_epochs=72)
-checkpoint_config = dict(interval=12)
